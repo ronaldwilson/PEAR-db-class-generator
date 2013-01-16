@@ -1,0 +1,43 @@
+	/*------------clear Array before Insert---------------  */
+
+	function clearArray(&$array) 
+	{
+		
+		if (!is_array($array) || count($array)==0)
+			return PEAR::raiseError("INVALID_ARGUMENT");
+
+		foreach ($array as $key => $val)
+			if (!array_key_exists($key, $this->col))
+				unset($array[$key]);
+		return $array;
+	}
+
+	/*------------       Insertion     ---------------  */
+	
+	function insert(&$array) 
+	{
+				
+		$obj	= $this->clearArray($array);
+					
+		if (is_a($obj, "PEAR_Error"))
+			return $obj;
+				
+		$obj	= parent::insert($array);
+		if (is_a($obj, "PEAR_Error"))
+			return $obj;
+		return mysql_insert_id();
+	}
+
+	/*------------       update table     ---------------  */
+	
+	function update(&$array, $where) 
+	{
+		$obj	= $this->clearArray($array);
+			if (is_a($obj, "PEAR_Error"))
+				return $obj;
+				
+		$obj	=  parent::update($array,$where);
+		if (is_a($obj, "PEAR_Error"))
+			return $obj;
+		return mysql_insert_id();
+	}
